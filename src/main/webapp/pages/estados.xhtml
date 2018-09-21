@@ -9,33 +9,51 @@
 	
 	<p:growl id="mensagem" />
 
-	<h:form>
+	<h:form id="formListagem">
 		<p:panel header="Estados - Listagem">
-			<p:dataTable emptyMessage="Nenhum registro encontrado." paginator="true">
+			<p:dataTable id="tabela" emptyMessage="Nenhum registro encontrado." paginator="true" value="#{estadoBean.estados}" var="est" rows="15">
 				<f:facet name="header">
-					<p:commandButton value="Novo" oncomplete="PF('dialogo').show();" />
+					<p:commandButton value="Novo" oncomplete="PF('dialogo').show();" actionListener="#{estadoBean.novo}" update=":formCadastro:painel"/>
 				</f:facet>
-				<p:column headerText="Nome"></p:column>
-				<p:column headerText="Sigla"></p:column>
-				<p:column headerText="Opções"></p:column>
+				<p:column headerText="Nome" sortBy="#{est.nome}" filterBy="#{est.nome}">
+					<h:outputText value="#{est.nome}"/>
+				</p:column>
+				<p:column headerText="Sigla" sortBy="#{est.sigla}" filterBy="#{est.sigla}">
+					<h:outputText value="#{est.sigla}"/>
+				</p:column>
+				<p:column headerText="Opções">
+					<p:commandButton icon="ui-icon-trash" actionListener="#{estadoBean.excluir}" update=":mensagem :formListagem:tabela">
+				        <p:confirm header="Confirmação" message="Deseja excluir o estado?" icon="ui-icon-alert" />
+				        <f:attribute name="estadoSelecionado" value="#{est}" />
+				    </p:commandButton>
+				    <p:commandButton icon="ui-icon-pencil" actionListener="#{estadoBean.editar}" update=":mensagem :formCadastro:painel" oncomplete="PF('dialogo').show();">
+				    	<f:attribute name="estadoSelecionado" value="#{est}" />
+				    </p:commandButton>
+				</p:column>
 			</p:dataTable>
+			
+			<p:confirmDialog global="true">
+				<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+			</p:confirmDialog>
+			
 		</p:panel>
 	</h:form>
 
 
 	<p:dialog header="Estados - Cadastro" widgetVar="dialogo" draggable="false" resizable="false" modal="true" closable="false">
-		<h:form>
-			<h:panelGrid columns="2">
+		<h:form id="formCadastro">
+			<h:panelGrid id="painel" columns="2">
 			
 				<p:outputLabel value="Nome " />
-				<p:inputText size="30" maxlength="50" />
+				<p:inputText value="#{estadoBean.estado.nome}" size="30" maxlength="50" />
 			
 				<p:outputLabel value="Sigla " />
-				<p:inputText size="6" maxlength="2" />
+				<p:inputText value="#{estadoBean.estado.sigla}" size="6" maxlength="2" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				
-				<p:commandButton value="Salvar" actionListener="#{estadoBean.salvar}" update=":mensagem" />
+				<p:commandButton value="Salvar" actionListener="#{estadoBean.salvar}" update=":mensagem :formCadastro:painel :formListagem:tabela"/>
 				<p:commandButton value="Fechar"  oncomplete="PF('dialogo').hide();" />
 			
 			</h:panelGrid>

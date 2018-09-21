@@ -85,7 +85,22 @@ public class FabricanteDAOTeste {
 			System.out.println("Registro não encontrado");
 		}
 		
+	}
+	
+	
+	@Test
+	@Ignore
+	public void mergeIncluir(){
 		
+		//Fabricante fabricante = new Fabricante();
+		//fabricante.setDescricao("CIMED");
+		//FabricanteDAO fabricanteDAO = new FabricanteDAO();
+		//fabricanteDAO.merge(fabricante);
+		
+		FabricanteDAO fabricanteDAO = new FabricanteDAO();
+		Fabricante fabricante = new Fabricante();
+		fabricante.setDescricao("CIMED");
+		fabricanteDAO.merge(fabricante);
 		
 	}
 	

@@ -119,7 +119,7 @@ public class GenericDAO<Entidade> {
 		
 	}
 	
-public void editar(Entidade enti){
+	public void editar(Entidade enti){
 		
 		Session sessao = HibernateUtil.getFabricaDeSessoes().openSession();
 		Transaction transa = null;
@@ -142,6 +142,33 @@ public void editar(Entidade enti){
 		
 			sessao.close();
 			
+		}
+		
+	}
+	
+	public void merge(Entidade enti){
+		
+		Session sessao = HibernateUtil.getFabricaDeSessoes().openSession();
+		Transaction transa = null;
+		
+		try{
+			
+			System.out.println(enti.toString());
+			
+			transa = sessao.beginTransaction();
+			sessao.merge(enti);
+			transa.commit();
+			
+		}catch(RuntimeException erro){
+			
+			if(transa != null){
+				transa.rollback();
+			}
+			
+			throw erro;
+			
+		}finally {
+			sessao.close();
 		}
 		
 	}
